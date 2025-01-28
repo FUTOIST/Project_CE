@@ -1,0 +1,24 @@
+a.button_icon {
+    text-decoration: none; /* เอาขีดเส้นใต้ของลิงก์ออก */
+}
+
+
+.button_icon {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 35px;
+    margin: 35px 0px 0 45px;
+    font-size: 16px;
+    color: white;
+    background-color: #2E3136;
+    border: none;
+    border-radius: 20px 5px;
+    cursor: pointer;
+}
+
+.button_icon i {
+    font-size: 60px; /* ปรับขนาดของไอคอนให้ใหญ่ขึ้น */
+    margin-bottom: 5px; /* ปรับระยะห่างระหว่างไอคอนและข้อความ */
+}

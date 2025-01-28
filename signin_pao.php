@@ -33,7 +33,6 @@ if (isset($_POST['signin'])) {
             if ($row) {
                 // ตรวจสอบรหัสผ่าน
                 if ($password === $row['password']) {
-                    // รหัสผ่านถูกต้อง
                     if ($row['urole'] == 'admin') {
                         $_SESSION['admin_login'] = $row['id_user'];
                         header("location: admin_pao/admin_home.php");

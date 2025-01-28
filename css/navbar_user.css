@@ -1,0 +1,44 @@
+body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+        }
+        .navbar {
+            width: 300px;
+            height: 100vh;
+            background-color: #d4f4dd; /* สีเขียวอ่อน */
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            
+        }
+        .navbar h2 { 
+            font-size: 1.5rem;
+            color: #2e7d32; /* สีเขียวเข้ม */
+            margin-bottom: 35px;
+            text-align: center;
+        }
+        .navbar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .navbar ul li {
+            margin: 5px 0;
+        }
+        .navbar ul li a {
+            text-decoration: none; 
+            color: #2e7d32;
+            font-size: 1.5rem;
+            display: block;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .navbar ul li a:hover {
+            background-color: #a5d6a7; /* สีเขียวอ่อนเข้มขึ้น */
+        }
+        .content {
+            margin-left: 250px;
+            padding: 30px;
+            flex-grow: 1;
+        }
