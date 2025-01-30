@@ -28,7 +28,7 @@ body {
         .navbar ul li a {
             text-decoration: none; 
             color: #2e7d32;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             display: block;
             padding: 10px;
             border-radius: 8px;
@@ -38,7 +38,15 @@ body {
             background-color: #a5d6a7; /* สีเขียวอ่อนเข้มขึ้น */
         }
         .content {
-            margin-left: 250px;
+            margin-left: 340px;
             padding: 30px;
             flex-grow: 1;
+        }
+
+        .content h1 {
+            text-align: center;
+        }
+
+        .content p {
+            text-align: center;
         }

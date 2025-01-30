@@ -16,7 +16,7 @@ if (!isset($_SESSION['admin_login'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แจ้งซ่อมอุปกรณ์-องค์การบริหารส่วนจังหวัดปัตตานี</title>
+    <title>ตรวจสอบสถานะ-องค์การบริหารส่วนจังหวัดปัตตานี</title>
 
     <link rel="stylesheet" href="../css/navbar_user.css">
 
@@ -35,7 +35,7 @@ if (!isset($_SESSION['admin_login'])) {
     </div>
     <hr>
     <div class="content">
-        <h1>แจ้งซ่อมอุปกรณ์</h1>
+        <h1>ตรวจสอบสถานะ</h1>
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto quod molestiae itaque mollitia, nihil suscipit?</p>
     </div>
 </body>
