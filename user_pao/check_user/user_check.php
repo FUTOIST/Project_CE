@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-require_once '../db_pao.php';
+require_once '../../db_pao.php';
 if (!isset($_SESSION['user_login'])) {
     $_SESSION['error'] = 'กรุณาเข้าสู่ระบบ!';
     header('location: \project_ce\index.php');
@@ -16,19 +16,19 @@ if (!isset($_SESSION['user_login'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แจ้งซ่อมอุปกรณ์-องค์การบริหารส่วนจังหวัดปัตตานี</title>
+    <title>ตรวจสอบสถานะ-องค์การบริหารส่วนจังหวัดปัตตานี</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <link rel="stylesheet" href="../css/navbar_user.css">
+    <link rel="stylesheet" href="../../css/navbar_user.css">
 </head>
 
 <body>
     <div class="navbar">
         <div class="logo">
-            <img src="../img_usage/logo.png" alt="โลโก้">
+            <img src="../../img_usage/logo.png" alt="โลโก้">
         </div>
         <ul class="menu">
             <li><a href="http://localhost/project_ce/user_pao/user_home.php">แจ้งซ่อมอุปกรณ์</a></li>
@@ -38,7 +38,7 @@ if (!isset($_SESSION['user_login'])) {
         </ul>
         <ul class="logout">
             <li>
-                <a href="../logout_pao.php" onclick="return confirm('ต้องการออกจากระบบ ใช่หรือไม่?');">
+                <a href="../../logout_pao.php" onclick="return confirm('ต้องการออกจากระบบ ใช่หรือไม่?');">
                     ออกจากระบบ
                 </a>
             </li>
@@ -60,8 +60,8 @@ if (!isset($_SESSION['user_login'])) {
                 </div>
             <?php } ?>
         </div>
-        <h1>แจ้งซ่อมอุปกรณ์</h1>
-        <p1>ท่านสามารถแจ้งซ่อมอุปกรณ์คอมพิวเตอร์ ปริ้นเตอร์ และครุภัณฑ์ต่างๆ</p1>
+        <h1>ตรวจสอบสถานะ</h1>
+        <p1>สามารถดูและตรวจสอบสถานะการแจ้งซ่อมอุปกรณ์ของท่าน</p1>
         <hr>
 
 

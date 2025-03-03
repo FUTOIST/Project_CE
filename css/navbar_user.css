@@ -1,52 +1,144 @@
 body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-        }
-        .navbar {
-            width: 300px;
-            height: 100vh;
-            background-color: #d4f4dd; /* สีเขียวอ่อน */
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            
-        }
-        .navbar h2 { 
-            font-size: 1.5rem;
-            color: #2e7d32; /* สีเขียวเข้ม */
-            margin-bottom: 35px;
-            text-align: center;
-        }
-        .navbar ul {
-            list-style: none;
-            padding: 0;
-        }
-        .navbar ul li {
-            margin: 5px 0;
-        }
-        .navbar ul li a {
-            text-decoration: none; 
-            color: #2e7d32;
-            font-size: 1.4rem;
-            display: block;
-            padding: 10px;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
-        }
-        .navbar ul li a:hover {
-            background-color: #a5d6a7; /* สีเขียวอ่อนเข้มขึ้น */
-        }
-        .content {
-            margin-left: 340px;
-            padding: 30px;
-            flex-grow: 1;
-        }
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+}
 
-        .content h1 {
-            text-align: center;
-        }
+.navbar {
+    min-width: 300px;
+    height: 100vh;
+    background-color: #d4f4dd;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 
-        .content p {
-            text-align: center;
-        }
+    /* จัดเรียงให้โลโก้อยู่ด้านบน และเมนูอยู่ด้านล่าง */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* จัดให้อยู่กึ่งกลาง */
+}
+
+/* ปรับแต่งโลโก้ */
+.logo {
+    text-align: center;
+    margin-bottom: 30px; /* เพิ่มช่องว่างระหว่างโลโก้กับเมนู */
+}
+
+.logo img {
+    width: 200px;
+    height: auto;
+}
+
+/* ปรับเมนูให้จัดเรียงตรงกลาง */
+.navbar ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.navbar ul li {
+    margin: 5px 0;
+}
+
+.navbar ul li a {
+    text-decoration: none; 
+    color: #2e7d32;
+    font-size: 1.2rem;
+    display: block;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar ul li a:hover {
+    background-color: #a5d6a7;
+    color: #fff;
+}
+
+/* ปรับ content ไม่ให้ถูก Navbar ทับ */
+.content {
+    margin-top: 30px;
+    margin-left: 320px;
+    padding: 30px;
+    flex-grow: 1;
+}
+
+.content h1, .content p {
+    text-align: center;
+}
+
+/* ปรับปรุงปุ่มออกจากระบบ */
+.logout {
+    margin-top: auto;
+    padding: 10px;
+    text-align: center;
+}
+
+.logout a {
+    color: red !important;  /* บังคับให้สีแดงแน่นอน */
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2rem; /* ปรับขนาดตัวอักษรให้ใหญ่ขึ้น */
+}
+
+/* เพิ่มสีแดงให้ชัดขึ้นเมื่อเมาส์ชี้ */
+.logout a:hover {
+    color: darkred;
+}
+
+/* ปรับกล่องข้อมูล User */
+.container-box {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+    background-color: #a5d6a7;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* ปรับให้แสดง User ขนาดที่เหมาะสม */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-info p {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+h1 {
+    font-family: 'Roboto', sans-serif; /* ใช้ฟอนต์ที่สวยงาม */
+    font-size: 2.8rem; /* ขนาดใหญ่กำลังดี */
+    color: #2e7d32; /* สีเขียวเข้ม */
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+p1 {
+    font-family: 'Roboto', sans-serif; /* ใช้ฟอนต์ที่สวยงาม */
+    font-size: 18px; /* ขนาดใหญ่กำลังดี */
+    color: #2e7d32; /* สีเขียวเข้ม */
+    text-align: center; /* จัดข้อความให้อยู่ตรงกลาง */
+    font-weight: bold;
+    margin-bottom: 20px;
+    display: block; /* ทำให้ p1 เป็น block-level element */
+    width: 100%; /* ให้มีความกว้างเต็มที่ */
+}
+

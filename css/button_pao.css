@@ -1,3 +1,7 @@
+body{
+    background: #d4f4dd;;
+}
+
 a.button_icon {
     text-decoration: none; /* เอาขีดเส้นใต้ของลิงก์ออก */
 }
@@ -12,7 +16,7 @@ a.button_icon {
     margin: 35px 0px 0 45px;
     font-size: 16px;
     color: white;
-    background-color: #2E3136;
+    background-color: #2e7d32;;
     border: none;
     border-radius: 20px 5px;
     cursor: pointer;
