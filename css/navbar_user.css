@@ -142,3 +142,57 @@ p1 {
     width: 100%; /* ให้มีความกว้างเต็มที่ */
 }
 
+/* สีเขียวเข้มและอ่อน */
+:root {
+    --dark-green: #2e7d32;
+    --light-green: #a5d6a7;
+    --hover-green: #66bb6a;
+}
+
+/* ปรับแต่งการ์ด */
+.model-card {
+    background-color: #f5fff5;
+    border: 2px solid var(--light-green);
+    border-radius: 12px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.model-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(46, 125, 50, 0.3);
+}
+
+/* หัวข้อการ์ด */
+.card-header.bg-dark-green {
+    background-color: var(--dark-green) !important;
+    color: white;
+    border-radius: 12px 12px 0 0;
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* ปุ่มปรับแต่ง */
+.btn-edit {
+    background-color: var(--hover-green);
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn-edit:hover {
+    background-color: var(--dark-green);
+    color: white;
+}
+
+.btn-delete {
+    background-color: #e57373;
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn-delete:hover {
+    background-color: #d32f2f;
+    color: white;
+}

@@ -64,7 +64,101 @@ if (!isset($_SESSION['user_login'])) {
         <p1>ท่านสามารถแจ้งซ่อมอุปกรณ์คอมพิวเตอร์ ปริ้นเตอร์ และครุภัณฑ์ต่างๆ</p1>
         <hr>
 
+        <!--------------- แสดง Pop up เพื่อ Insert ข้อมูลของ repairs -------------->
+        <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered"> <!-- เพิ่ม modal-dialog-centered -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;">เพิ่มรุ่นอุปกรณ์</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="insert_model_it_pao.php" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="id_device" class="col-form-label" style="font-weight: bold;">ชื่ออุปกรณ์:</label>
+                                <select required class="form-control" name="id_device">
+                                    <option value="">เลือกอุปกรณ์ (ชื่ออุปกรณ์)</option>
+                                    <?php
+                                    $stmt = $pdo->query("SELECT id_device, device_name FROM devices");
+                                    $stmt->execute();
+                                    $devices = $stmt->fetchAll();
 
+                                    foreach ($devices as $device) {
+                                        echo "<option value='{$device['id_device']}'>{$device['device_name']}</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="model_name" class="col-form-label" style="font-weight: bold;">ชื่อรุ่นอุปกรณ์:</label>
+                                <input type="text" required class="form-control" placeholder="กรอกชื่ออุปกรณ์" name="model_name">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" name="submit" class="btn btn-success">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-12 text-end">
+                    <button type="button" class="btn btn-success btn-lg px-4 py-2" data-bs-toggle="modal" data-bs-target="#userModal" data-bs-whatever="@mdo">
+                        <i class="bi bi-device-ssd"></i> แจ้งซ่อมอุปกรณ์
+                    </button>
+                </div>
+            </div>
+            <br>
+
+            <!-- ช่องแสดงข้อมูลของ repair -->
+            <div class="row">
+                <?php
+                // ดึงข้อมูลจากฐานข้อมูล
+                $models = [];
+                try {
+                    $stmt = $pdo->query("SELECT * FROM models");
+                    $models = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } catch (PDOException $e) {
+                    $_SESSION['error'] = "เกิดข้อผิดพลาดในการดึงข้อมูล: " . $e->getMessage();
+                }
+
+                if (empty($models)) {
+                    echo "<div class='col-12 text-center'><p class='text-muted'>ไม่มีข้อมูลในฐานข้อมูล</p></div>";
+                } else {
+                    foreach ($models as $model) {
+                ?>
+                        <div class="col-md-4 mb-4">
+                            <div class="card model-card shadow-lg">
+                                <div class="card-header bg-dark-green text-white">
+                                    <h5 class="card-title mb-0"><?php echo htmlspecialchars($model['model_name']); ?></h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text text-start">
+                                        <strong>รหัสรุ่นอุปกรณ์:</strong> <?php echo htmlspecialchars($model['id_model']); ?><br>
+                                        <strong>รหัสอุปกรณ์:</strong> <?php echo htmlspecialchars($model['id_device']); ?>
+                                    </p>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="edit_model_it_pao.php?id_model=<?php echo $model['id_model']; ?>" class="btn btn-sm btn-edit">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
+                                        <a onclick="return confirm('Are you sure you want to delete?');"
+                                            href="?delete_model=<?php echo $model['id_model']; ?>"
+                                            class="btn btn-sm btn-delete">
+                                            <i class="bi bi-x-circle"></i> Delete
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                <?php
+                    }
+                }
+                ?>
+            </div>
+        </div>
     </div>
 </body>
 <!-- JavaScript Bundle with Popper -->
