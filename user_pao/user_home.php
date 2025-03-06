@@ -105,20 +105,28 @@ date_default_timezone_set('Asia/Bangkok');
                                 </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="id_device" class="col-form-label" style="font-weight: bold;">ชื่ออุปกรณ์:</label>
-                                <select required class="form-control" name="id_device">
-                                    <option value="">เลือกอุปกรณ์ (ชื่ออุปกรณ์)</option>
-                                    <?php
-                                    $stmt = $pdo->query("SELECT id_device, device_name FROM devices");
-                                    $stmt->execute();
-                                    $devices = $stmt->fetchAll();
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="id_device" class="col-form-label" style="font-weight: bold;">ชื่ออุปกรณ์:</label>
+                                    <select required class="form-control" name="id_device" id="id_device">
+                                        <option value="">เลือกอุปกรณ์ (ชื่ออุปกรณ์)</option>
+                                        <?php
+                                        $stmt = $pdo->query("SELECT id_device, device_name FROM devices");
+                                        $devices = $stmt->fetchAll();
+                                        foreach ($devices as $device) {
+                                            echo "<option value='{$device['id_device']}'>{$device['device_name']}</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
 
-                                    foreach ($devices as $device) {
-                                        echo "<option value='{$device['id_device']}'>{$device['device_name']}</option>";
-                                    }
-                                    ?>
-                                </select>
+                                <div class="col-md-6">
+                                    <label for="id_model" class="col-form-label" style="font-weight: bold;">รุ่นอุปกรณ์:</label>
+                                    <select required class="form-control" name="id_model" id="id_model">
+                                        <option value="">เลือกอุปกรณ์ (รุ่นอุปกรณ์)</option>
+                                    </select>
+                                </div>
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -187,9 +195,42 @@ date_default_timezone_set('Asia/Bangkok');
         </div>
     </div>
     </div>
-</body>
-<!-- JavaScript Bundle with Popper -->
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#id_device").change(function() {
+                var id_device = $(this).val();
+                $("#id_model").html('<option value="">กำลังโหลด...</option>');
+
+                if (id_device !== "") {
+                    $.ajax({
+                        url: "repair_user/fetch_models.php",
+                        type: "POST",
+                        data: {
+                            id_device: id_device
+                        },
+                        dataType: "json",
+                        success: function(data) {
+                            var options = '<option value="">เลือกอุปกรณ์ (รุ่นอุปกรณ์)</option>';
+                            $.each(data, function(index, model) {
+                                options += '<option value="' + model.id_model + '">' + model.model_name + '</option>';
+                            });
+                            $("#id_model").html(options);
+                        },
+                        error: function() {
+                            $("#id_model").html('<option value="">เกิดข้อผิดพลาด</option>');
+                        }
+                    });
+                } else {
+                    $("#id_model").html('<option value="">เลือกอุปกรณ์ (รุ่นอุปกรณ์)</option>');
+                }
+            });
+        });
+    </script>
+
+</body>
 
 </html>
