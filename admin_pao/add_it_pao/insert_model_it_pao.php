@@ -12,9 +12,9 @@ if (isset($_POST['submit'])) {
     $mod_check->bindParam(":model_name", $model_name, PDO::PARAM_STR);
     $mod_check->bindParam(":id_device", $id_device, PDO::PARAM_INT);
     $mod_check->execute();
-    $add_exists = $mod_check->fetchColumn();
+    $mod_exists = $mod_check->fetchColumn();
 
-    if ($add_exists > 0) {
+    if ($mod_exists > 0) {
         $_SESSION['error'] = "มีชื่อรุ่นนี้สำหรับอุปกรณ์นี้อยู่แล้ว!";
         header("location: add_it_pao.php");
         exit();
@@ -40,5 +40,3 @@ if (isset($_POST['submit'])) {
     header("location: add_it_pao.php");
     exit();
 }
-
-?>

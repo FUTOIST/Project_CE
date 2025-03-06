@@ -21,7 +21,7 @@ if (isset($_POST['submit'])) {
 
     // เพิ่มข้อมูลลงในฐานข้อมูล devices
     try {
-        $sql = $pdo->prepare("INSERT INTO models (device_name) VALUES (:device_name)");
+        $sql = $pdo->prepare("INSERT INTO devices (device_name) VALUES (:device_name)");
         $sql->bindParam(":device_name", $device_name, PDO::PARAM_STR);
         $result = $sql->execute();
 
