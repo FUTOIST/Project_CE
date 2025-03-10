@@ -82,7 +82,7 @@ if (isset($_POST['update'])) {
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <label for="id_device" class="col-form-label" style="font-weight: bold;">ชื่ออุปกรณ์:</label>
                                 <select required class="form-control" name="id_device" id="id_device">
                                     <option value="">เลือกอุปกรณ์ (ชื่ออุปกรณ์)</option>
@@ -96,7 +96,7 @@ if (isset($_POST['update'])) {
                                 </select>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <label for="id_model" class="col-form-label" style="font-weight: bold;">รุ่นอุปกรณ์:</label>
                                 <select required class="form-control" name="id_model" id="id_model">
                                     <option value="">เลือกอุปกรณ์ (รุ่นอุปกรณ์)</option>
@@ -118,7 +118,7 @@ if (isset($_POST['update'])) {
                         </div>
 
                         <div class="row g-3">
-                            <div class="col-md-4">
+                            <div class="col-md-5">
                                 <label for="id_khong" class="col-form-label" style="font-weight: bold;">กองที่สังกัด :</label>
                                 <select class="form-control" name="id_khong">
                                     <option value="">เลือกกอง (ที่ประจำการอยู่)</option>

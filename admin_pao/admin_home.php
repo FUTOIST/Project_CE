@@ -63,9 +63,6 @@ if (!isset($_SESSION['admin_login'])) {
                 <i class="bi bi-pc-display"></i>
                 การแจ้งซ่อมอุปกรณ์
             </a>
-            <a href="#" class="button_icon">
-                #
-            </a>
     </div>
     <div class="container">
 
