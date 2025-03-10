@@ -8,8 +8,42 @@ if (!isset($_SESSION['user_login'])) {
     exit();
 }
 
+// ลบการแจ้งซ่อม
+if (isset($_GET['delete_repair'])) {
+    $delete_id = $_GET['delete_repair'];
+    $deletestmt = $pdo->prepare("DELETE FROM repairs WHERE id_repair = :delete_id");
+    $deletestmt->bindParam(':delete_id', $delete_id, PDO::PARAM_INT);
+    $result = $deletestmt->execute();
+
+    if ($result) {
+        echo "<script>alert('ลบข้อมูลสำเร็จ');</script>";
+        $_SESSION['success'] = "ลบข้อมูลสำเร็จ";
+        header("refresh:1; url=user_home.php");
+        exit();
+    } else {
+        $_SESSION['error'] = "ไม่สามารถลบข้อมูลได้";
+        header("location: user_home.php");
+        exit();
+    }
+}
+
 // ตั้งค่าโซนเวลาเป็นเวลาประเทศไทย (UTC+7)
 date_default_timezone_set('Asia/Bangkok');
+
+function getStatusBadge($status)
+{
+    $statusColors = [
+        "รอดำเนินการซ่อม" => "warning text-dark", // เหลือง
+        "กำลังดำเนินการซ่อม" => "primary", // น้ำเงิน
+        "การซ่อมเสร็จสิ้น" => "success", // เขียว
+        "ยกเลิกการซ่อม" => "danger" // แดง
+    ];
+
+    $color = $statusColors[$status] ?? "secondary"; // สีเทาสำหรับสถานะที่ไม่รู้จัก
+    return "<span class='badge bg-$color px-3 py-2'>$status</span>";
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -66,6 +100,26 @@ date_default_timezone_set('Asia/Bangkok');
         <p1>ท่านสามารถแจ้งซ่อมอุปกรณ์คอมพิวเตอร์ ปริ้นเตอร์ และครุภัณฑ์ต่างๆ</p1>
         <hr>
 
+        <?php if (isset($_SESSION['success'])) { ?>
+            <div class="alert custom-success alert-dismissible fade show" role="alert">
+                <?php
+                echo $_SESSION['success'];
+                unset($_SESSION['success']);
+                ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php } ?>
+
+        <?php if (isset($_SESSION['error'])) { ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?php
+                echo $_SESSION['error'];
+                unset($_SESSION['error']);
+                ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php } ?>
+
         <!--------------- แสดง Pop up เพื่อ Insert ข้อมูลของ repairs -------------->
         <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <<div class="modal-dialog modal-lg modal-dialog-centered"> <!-- เพิ่ม modal-dialog-centered -->
@@ -74,6 +128,7 @@ date_default_timezone_set('Asia/Bangkok');
                         <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;">เพิ่มรุ่นอุปกรณ์</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+
                     <div class="modal-body">
                         <form action="repair_user/insert_rep_user.php" method="post" enctype="multipart/form-data">
                             <div class="row mb-3">
@@ -88,12 +143,16 @@ date_default_timezone_set('Asia/Bangkok');
                                     <select required class="form-control" name="id_khong">
                                         <option value="">เลือกกอง (ที่ประจำการอยู่)</option>
                                         <?php
+                                        // ตรวจสอบข้อมูลจากฐานข้อมูลเพื่อแสดงกอง
                                         $stmt = $pdo->query("SELECT id_khong, khong_name FROM khongs");
                                         $stmt->execute();
                                         $khongs = $stmt->fetchAll();
 
+                                        // ตรวจสอบว่าค่า id_khong ที่เลือกมีค่าในฐานข้อมูลหรือไม่
                                         foreach ($khongs as $khong) {
-                                            echo "<option value='{$khong['id_khong']}'>{$khong['khong_name']}</option>";
+                                            // ถ้า id_khong ของการซ่อมตรงกับค่า id_khong ในฐานข้อมูล ให้เลือกเป็น selected
+                                            $selected = (isset($repair['id_khong']) && $repair['id_khong'] == $khong['id_khong']) ? 'selected' : '';
+                                            echo "<option value='{$khong['id_khong']}' $selected>{$khong['khong_name']}</option>";
                                         }
                                         ?>
                                     </select>
@@ -101,7 +160,8 @@ date_default_timezone_set('Asia/Bangkok');
 
                                 <div class="col-md-6">
                                     <label for="date_time" class="col-form-label" style="font-weight: bold;">วันและเวลา :</label>
-                                    <input type="text" required class="form-control" name="date_time" value="<?= date('d-m-Y H:i:s') ?>" readonly>
+                                    <!-- ใช้ value ตรงนี้เพื่อแสดงวันที่และเวลาปัจจุบัน -->
+                                    <input type="text" class="form-control" name="date_time" value="<?= date('d/m/Y') ?>" readonly>
                                 </div>
                             </div>
 
@@ -126,8 +186,20 @@ date_default_timezone_set('Asia/Bangkok');
                                         <option value="">เลือกอุปกรณ์ (รุ่นอุปกรณ์)</option>
                                     </select>
                                 </div>
-
                             </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="repair_status" class="col-form-label" style="font-weight: bold;">สถานะ :</label>
+                                    <select required class="form-control" name="repair_status" disabled>
+                                        <option value="รอดำเนินการซ่อม" selected style="color: yellow;">รอดำเนินการซ่อม</option>
+                                        <option value="กำลังดำเนินการซ่อม" style="color: blue;">กำลังดำเนินการซ่อม</option>
+                                        <option value="การซ่อมเสร็จสิ้น" style="color: green;">การซ่อมเสร็จสิ้น</option>
+                                        <option value="ยกเลิกการซ่อม" style="color: red;">ยกเลิกการซ่อม</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" name="submit" class="btn btn-success">Submit</button>
@@ -152,35 +224,42 @@ date_default_timezone_set('Asia/Bangkok');
         <div class="row">
             <?php
             // ดึงข้อมูลจากฐานข้อมูล
-            $models = [];
+            $repairs = [];
             try {
-                $stmt = $pdo->query("SELECT * FROM models");
-                $models = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $stmt = $pdo->query("SELECT r.*, d.device_name, m.model_name, k.khong_name FROM repairs r JOIN devices d ON r.id_device = d.id_device JOIN models m ON r.id_model = m.id_model JOIN khongs k ON r.id_khong = k.id_khong");
+                $repairs = $stmt->fetchAll(PDO::FETCH_ASSOC);
             } catch (PDOException $e) {
                 $_SESSION['error'] = "เกิดข้อผิดพลาดในการดึงข้อมูล: " . $e->getMessage();
             }
 
-            if (empty($models)) {
+            if (empty($repairs)) {
                 echo "<div class='col-12 text-center'><p class='text-muted'>ไม่มีข้อมูลในฐานข้อมูล</p></div>";
             } else {
-                foreach ($models as $model) {
+                foreach ($repairs as $repair) {
             ?>
                     <div class="col-md-4 mb-4">
                         <div class="card model-card shadow-lg">
                             <div class="card-header bg-dark-green text-white">
-                                <h5 class="card-title mb-0"><?php echo htmlspecialchars($model['model_name']); ?></h5>
+                                <h5 class="card-title mb-0"><?php echo htmlspecialchars($repair['device_name']); ?></h5>
                             </div>
                             <div class="card-body">
                                 <p class="card-text text-start">
-                                    <strong>รหัสรุ่นอุปกรณ์:</strong> <?php echo htmlspecialchars($model['id_model']); ?><br>
-                                    <strong>รหัสอุปกรณ์:</strong> <?php echo htmlspecialchars($model['id_device']); ?>
+                                    <strong>ชื่อรุ่นอุปกรณ์ :</strong> <?php echo htmlspecialchars($repair['model_name']); ?>
+                                    <br>
+                                    <strong>วันที่ :</strong> <?php echo date('d/m/Y', strtotime($repair['date_time'])); ?>
+                                    <br>
+                                    <strong>กองที่แจ้ง :</strong> <?php echo htmlspecialchars($repair['khong_name']); ?>
+                                    <br>
+                                    <strong class="me-2">สถานะ :</strong>
+                                    <?= getStatusBadge($repair['repair_status']); ?><br>
                                 </p>
                                 <div class="d-flex justify-content-center gap-2">
-                                    <a href="edit_model_it_pao.php?id_model=<?php echo $model['id_model']; ?>" class="btn btn-sm btn-edit">
+                                    <a href="repair_user/edit_rep_user.php?id_repair=<?php echo $repair['id_repair']; ?>"
+                                        class="btn btn-sm btn-edit">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </a>
                                     <a onclick="return confirm('Are you sure you want to delete?');"
-                                        href="?delete_model=<?php echo $model['id_model']; ?>"
+                                        href="?delete_repair=<?php echo $repair['id_repair']; ?>"
                                         class="btn btn-sm btn-delete">
                                         <i class="bi bi-x-circle"></i> Delete
                                     </a>
@@ -195,6 +274,7 @@ date_default_timezone_set('Asia/Bangkok');
         </div>
     </div>
     </div>
+
     <!-- JavaScript Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 

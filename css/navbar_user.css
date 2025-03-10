@@ -196,3 +196,15 @@ p1 {
     background-color: #d32f2f;
     color: white;
 }
+
+.badge {
+    font-size: 0.95rem; /* ทำให้ badge ใหญ่ขึ้น */
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 10px; /* ทำให้มีขอบโค้งมน */
+}
+
+.custom-success {
+    background-color: #d4edda; /* light green background */
+    color: #155724; /* dark green text */
+}

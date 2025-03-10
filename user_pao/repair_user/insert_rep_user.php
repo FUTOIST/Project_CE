@@ -5,30 +5,31 @@ require_once '../../db_pao.php';
 if (isset($_POST['submit'])) {
     $id_device = intval($_POST['id_device']);
     $id_khong = intval($_POST['id_khong']);
-    $id_user = intval($_POST['id_user']);  // แก้ไขจาก 'id_user' เป็น 'id_user' เพื่อรับค่าจาก hidden input
+    $id_user = intval($_POST['id_user']);
+    $id_model = intval($_POST['id_model']);  // เพิ่มการรับค่า id_model
     $date_time = trim($_POST['date_time']);
-    $repair_status = trim($_POST['repair_status']);
+
+    // แปลงวันที่เป็นรูปแบบที่ฐานข้อมูลรองรับ
+    $date_time = DateTime::createFromFormat('d/m/Y', $date_time);
+    if ($date_time) {
+        $date_time = $date_time->format('Y-m-d');  // แปลงเป็นรูปแบบที่ฐานข้อมูลต้องการ
+    } else {
+        $_SESSION['error'] = "รูปแบบวันที่ไม่ถูกต้อง";
+        header("Location: /Project_CE/user_pao/user_home.php");
+        exit();
+    }
+
+    // กำหนดสถานะเริ่มต้นเป็น "รอดำเนินการซ่อม"
+    $repair_status = "รอดำเนินการซ่อม";
 
     try {
-        // ตรวจสอบข้อมูลซ้ำ
-        $rep_check = $pdo->prepare("SELECT 1 FROM repairs WHERE id_device = :id_device AND id_khong = :id_khong AND id_user = :id_user LIMIT 1");
-        $rep_check->bindParam(":id_device", $id_device, PDO::PARAM_INT);
-        $rep_check->bindParam(":id_khong", $id_khong, PDO::PARAM_INT);
-        $rep_check->bindParam(":id_user", $id_user, PDO::PARAM_INT);
-        $rep_check->execute();
-
-        if ($rep_check->fetch()) {
-            $_SESSION['error'] = "มีการแจ้งซ่อมนี้อยู่แล้ว!";
-            header("Location: /Project_CE/user_pao/user_home.php");
-            exit();
-        }
-
-        // เพิ่มข้อมูลลงในฐานข้อมูล
-        $sql = $pdo->prepare("INSERT INTO repairs (id_device, id_khong, id_user, date_time, name_inform, repair_status) 
-                              VALUES (:id_device, :id_khong, :id_user, :date_time, :name_inform, :repair_status)");
+        // ตรวจสอบและบันทึกข้อมูล
+        $sql = $pdo->prepare("INSERT INTO repairs (id_device, id_khong, id_user, id_model, date_time, repair_status) 
+VALUES (:id_device, :id_khong, :id_user, :id_model, :date_time, :repair_status)");
         $sql->bindParam(":id_device", $id_device, PDO::PARAM_INT);
         $sql->bindParam(":id_khong", $id_khong, PDO::PARAM_INT);
         $sql->bindParam(":id_user", $id_user, PDO::PARAM_INT);
+        $sql->bindParam(":id_model", $id_model, PDO::PARAM_INT);
         $sql->bindParam(":date_time", $date_time, PDO::PARAM_STR);
         $sql->bindParam(":repair_status", $repair_status, PDO::PARAM_STR);
 
@@ -44,4 +45,5 @@ if (isset($_POST['submit'])) {
     header("Location: /Project_CE/user_pao/user_home.php");
     exit();
 }
+
 ?>
